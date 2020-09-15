@@ -179,7 +179,7 @@ func manifest(instance *servingv1alpha1.KnativeServing, apiclient client.Client,
 	// 3. Set Owner annotations
 	transforms := []mf.Transformer{mf.InjectNamespace(instance.GetNamespace()),
 		replaceKnCLIArtifactsImage(os.Getenv("IMAGE_KN_CLI_ARTIFACTS"), scheme),
-		common.SetOwnerAnnotations(instance),
+		common.SetOwnerAnnotationsServing(instance),
 	}
 
 	manifest, err = manifest.Transform(transforms...)
