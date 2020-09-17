@@ -65,11 +65,15 @@ spec:
           name: grpc
           protocol: TCP
         livenessProbe:
+          initialDelaySeconds: 5
+          periodSeconds: 30
           exec:
             command:
             - grpc_health_probe
             - -addr=localhost:50051
         readinessProbe:
+          initialDelaySeconds: 60
+          periodSeconds: 15
           exec:
             command:
             - grpc_health_probe
