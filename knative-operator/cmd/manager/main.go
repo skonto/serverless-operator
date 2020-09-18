@@ -136,8 +136,8 @@ func setupMonitoring(ctx context.Context, cfg *rest.Config) error {
 	if err != nil {
 		return fmt.Errorf("failed to create cluster config: %w", err)
 	}
-	cl, err := client.New(config, client.Options{})
 
+	cl, err := client.New(config, client.Options{})
 	if err != nil {
 		return fmt.Errorf("failed to create a client: %w", err)
 	}
@@ -147,7 +147,12 @@ func setupMonitoring(ctx context.Context, cfg *rest.Config) error {
 		return fmt.Errorf("failed to get operator namesapce: %w", err)
 	}
 
-	if err = common.SetupMonitoringRequirements(namespace, cl); err != nil {
+	operatorDeployment, err := common.GetServerlessOperatorDeployment(cl, namespace)
+	if err != nil {
+		return err
+	}
+
+	if err = common.SetupMonitoringRequirements(namespace, cl, operatorDeployment); err != nil {
 		return fmt.Errorf("failed to setup monitoring resources: %w", err)
 	}
 
@@ -158,6 +163,5 @@ func setupMonitoring(ctx context.Context, cfg *rest.Config) error {
 	if err := common.InstallHealthDashboard(cl); err != nil {
 		return fmt.Errorf("failed to setup the Knative Health Status Dashboard: %w", err)
 	}
-
 	return nil
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strings"
 
 	mfc "github.com/manifestival/controller-runtime-client"
 	mf "github.com/manifestival/manifestival"
@@ -19,7 +20,7 @@ const ConfigManagedNamespace = "openshift-config-managed"
 
 const ServingDashboardPath = "deploy/resources/dashboards/grafana-dash-knative.yaml"
 const EventingBrokerDashboardPath = "deploy/resources/dashboards/grafana-dash-knative-eventing-broker.yaml"
-const EventingFilterDashboardPath = "deploy/resources/dashboards/grafana-dash-knative-eventing-source.yaml"
+const EventingSourceDashboardPath = "deploy/resources/dashboards/grafana-dash-knative-eventing-source.yaml"
 
 // Apply applies dashboard resources.
 func Apply(path string, owner mf.Transformer, api client.Client) error {
@@ -34,7 +35,7 @@ func Apply(path string, owner mf.Transformer, api client.Client) error {
 	if err != nil {
 		return fmt.Errorf("failed to load dashboard manifest: %w", err)
 	}
-	log.Info("Installing dashboard")
+	log.Info("Installing dashboard ", "path:", path)
 	if err := manifest.Apply(); err != nil {
 		return fmt.Errorf("failed to apply dashboard manifest: %w", err)
 	}
@@ -75,9 +76,25 @@ func manifest(path string, owner mf.Transformer, apiclient client.Client) (mf.Ma
 
 // manifestPath returns dashboard resource manifest path
 func manifestPath(defaultPath string) string {
-	path := os.Getenv("DASHBOARD_MANIFEST_PATH")
-	if path == "" {
-		return defaultPath
+
+	// meant for testing only, if not in testing mode use the
+	// default path.
+	pathServing := os.Getenv("TEST_DASHBOARD_MANIFEST_PATH")
+	pathSource := os.Getenv("TEST_SOURCE_DASHBOARD_MANIFEST_PATH")
+	pathBroker := os.Getenv("TEST_BROKER_DASHBOARD_MANIFEST_PATH")
+
+	if pathSource != "" {
+		if strings.Contains(defaultPath, "eventing-source.yaml") {
+			return pathSource
+		}
 	}
-	return path
+	if pathBroker != "" {
+		if strings.Contains(defaultPath, "eventing-broker.yaml") {
+			return pathBroker
+		}
+	}
+	if pathServing != "" {
+		return pathServing
+	}
+	return defaultPath
 }

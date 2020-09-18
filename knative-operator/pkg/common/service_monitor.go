@@ -3,6 +3,7 @@ package common
 import (
 	"context"
 	"fmt"
+	"os"
 
 	monitoringv1 "github.com/coreos/prometheus-operator/pkg/apis/monitoring/v1"
 	mfclient "github.com/manifestival/controller-runtime-client"
@@ -19,8 +20,12 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-const EventingBrokerServiceMoinitorPath = "deploy/resources/broker-service-monitors.yaml"
-const EventingPingSourceMoinitorPath = "deploy/resources/ping_source_service_monitor.yaml"
+const (
+	EventingBrokerServiceMonitorPath     = "deploy/resources/broker-service-monitors.yaml"
+	EventingPingSourceMonitorPath        = "deploy/resources/ping_source_service_monitor.yaml"
+	testEventingBrokerServiceMonitorPath = "TEST_EVENTING_BROKER_SERVICE_MONITOR_PATH"
+	testPingSourceServiceMonitorPath     = "TEST_PING_SOURCE_SERVICE_MONITOR_PATH"
+)
 
 func SetupServerlessOperatorServiceMonitor(ctx context.Context, cfg *rest.Config, api client.Client, metricsPort int32, metricsHost string, operatorMetricsPort int32) error {
 	// Commented below to avoid a stream of these errors at startup:
@@ -96,7 +101,7 @@ func serveCRMetrics(cfg *rest.Config, metricsHost string, operatorMetricsPort in
 }
 
 func SetupEventingServiceMonitors(client client.Client, namespace string, instance *eventingv1alpha1.KnativeEventing) error {
-	manifest, err := mf.NewManifest(EventingBrokerServiceMoinitorPath, mf.UseClient(mfclient.NewClient(client)))
+	manifest, err := mf.NewManifest(getMonitorPath(testEventingBrokerServiceMonitorPath, EventingBrokerServiceMonitorPath), mf.UseClient(mfclient.NewClient(client)))
 	if err != nil {
 		return fmt.Errorf("unable to parse broker service monitors: %w", err)
 	}
@@ -111,7 +116,7 @@ func SetupEventingServiceMonitors(client client.Client, namespace string, instan
 	if err := manifest.Apply(); err != nil {
 		return err
 	}
-	manifest, err = mf.NewManifest(EventingPingSourceMoinitorPath, mf.UseClient(mfclient.NewClient(client)))
+	manifest, err = mf.NewManifest(getMonitorPath(testPingSourceServiceMonitorPath, EventingPingSourceMonitorPath), mf.UseClient(mfclient.NewClient(client)))
 	if err != nil {
 		return fmt.Errorf("unable to parse ping source service monitor: %w", err)
 	}
@@ -122,4 +127,12 @@ func SetupEventingServiceMonitors(client client.Client, namespace string, instan
 		return err
 	}
 	return nil
+}
+
+func getMonitorPath(envVar string, defaultVal string) string {
+	path := os.Getenv(envVar)
+	if path == "" {
+		return defaultVal
+	}
+	return path
 }
