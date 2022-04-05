@@ -29,7 +29,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/cache"
-
 	"knative.dev/pkg/controller"
 	"knative.dev/pkg/system"
 	"knative.dev/pkg/webhook"
@@ -43,7 +42,6 @@ func NewAdmissionController(
 	handlers map[schema.GroupVersionKind]resourcesemantics.GenericCRD,
 	wc func(context.Context) context.Context,
 	disallowUnknownFields bool,
-	callbacks ...map[schema.GroupVersionKind]Callback,
 ) *controller.Impl {
 
 	client := kubeclient.Get(ctx)
@@ -52,19 +50,6 @@ func NewAdmissionController(
 	options := webhook.GetOptions(ctx)
 
 	key := types.NamespacedName{Name: name}
-
-	// This not ideal, we are using a variadic argument to effectively make callbacks optional
-	// This allows this addition to be non-breaking to consumers of /pkg
-	// TODO: once all sub-repos have adopted this, we might move this back to a traditional param.
-	var unwrappedCallbacks map[schema.GroupVersionKind]Callback
-	switch len(callbacks) {
-	case 0:
-		unwrappedCallbacks = map[schema.GroupVersionKind]Callback{}
-	case 1:
-		unwrappedCallbacks = callbacks[0]
-	default:
-		panic("NewAdmissionController may not be called with multiple callback maps")
-	}
 
 	wh := &reconciler{
 		LeaderAwareFuncs: pkgreconciler.LeaderAwareFuncs{
@@ -75,10 +60,9 @@ func NewAdmissionController(
 			},
 		},
 
-		key:       key,
-		path:      path,
-		handlers:  handlers,
-		callbacks: unwrappedCallbacks,
+		key:      key,
+		path:     path,
+		handlers: handlers,
 
 		withContext:           wc,
 		disallowUnknownFields: disallowUnknownFields,

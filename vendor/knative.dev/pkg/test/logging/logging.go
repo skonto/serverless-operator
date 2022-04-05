@@ -33,7 +33,7 @@ import (
 	"go.opencensus.io/trace"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"k8s.io/klog/v2"
+	"k8s.io/klog"
 )
 
 const (

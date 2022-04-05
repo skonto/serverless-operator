@@ -23,7 +23,7 @@ import (
 	"k8s.io/gengo/namer"
 	"k8s.io/gengo/types"
 
-	"k8s.io/klog/v2"
+	"k8s.io/klog"
 )
 
 // factoryTestGenerator produces a file of factory injection of a given type.

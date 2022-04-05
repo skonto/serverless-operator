@@ -22,7 +22,7 @@ import (
 	"k8s.io/gengo/generator"
 	"k8s.io/gengo/namer"
 	"k8s.io/gengo/types"
-	"k8s.io/klog/v2"
+	"k8s.io/klog"
 )
 
 // reconcilerReconcilerStubGenerator produces a file of the stub of how to
