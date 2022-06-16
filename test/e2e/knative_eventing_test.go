@@ -1,6 +1,7 @@
 package e2e
 
 import (
+	"github.com/openshift-knative/serverless-operator/knative-operator/pkg/monitoring"
 	"testing"
 
 	"github.com/openshift-knative/serverless-operator/test"
@@ -27,6 +28,10 @@ var knativeEventingControlPlaneDeploymentNames = []string{
 func TestKnativeEventing(t *testing.T) {
 	caCtx := test.SetupClusterAdmin(t)
 	test.CleanupOnInterrupt(t, func() { test.CleanupAll(t, caCtx) })
+	t.Setenv(monitoring.OperatorDeploymentNameEnvKey, "knative-openshift")
+	if err := monitoringe2e.SetUpServerlessOperatorMonitoring(caCtx); err != nil {
+		t.Fatal("Failed to setup Serverless Operator Monitoring", err)
+	}
 
 	t.Run("verify health metrics work correctly", func(t *testing.T) {
 		// Eventing should be up

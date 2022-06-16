@@ -16,6 +16,7 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
+	ctr "sigs.k8s.io/controller-runtime/pkg/client"
 
 	eventingversioned "knative.dev/eventing/pkg/client/clientset/versioned"
 	operatorversioned "knative.dev/operator/pkg/client/clientset/versioned"
@@ -48,6 +49,7 @@ type Clients struct {
 	ConsoleCLIDownload consolev1.ConsoleCLIDownloadInterface
 	MonitoringClient   monclientv1.MonitoringV1Interface
 	Kafka              *kafkaversioned.Clientset
+	CtrRuntime         ctr.Client
 }
 
 // CleanupFunc defines a function that is called when the respective resource
@@ -139,6 +141,11 @@ func NewClients(kubeconfig string) (*Clients, error) {
 	clients.ConsoleCLIDownload = consolev1.NewForConfigOrDie(cfg).ConsoleCLIDownloads()
 
 	clients.MonitoringClient = monclientv1.NewForConfigOrDie(cfg)
+
+	clients.CtrRuntime, err = ctr.New(cfg, ctr.Options{})
+	if err != nil {
+		return nil, err
+	}
 
 	return clients, nil
 }

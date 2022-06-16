@@ -23,8 +23,8 @@ import (
 )
 
 const (
-	// operatorDeploymentNameEnvKey is the name of the deployment of the Openshift serverless operator
-	operatorDeploymentNameEnvKey = "DEPLOYMENT_NAME"
+	// OperatorDeploymentNameEnvKey is the name of the deployment of the Openshift serverless operator
+	OperatorDeploymentNameEnvKey = "DEPLOYMENT_NAME"
 	rbacName                     = "knative-prometheus-k8s"
 )
 
@@ -202,9 +202,9 @@ func createRBACManifestForPrometheusAccount(ns string, options mf.Option, labels
 }
 
 func GetOperatorDeploymentName() (string, error) {
-	ns, found := os.LookupEnv(operatorDeploymentNameEnvKey)
+	ns, found := os.LookupEnv(OperatorDeploymentNameEnvKey)
 	if !found {
-		return "", fmt.Errorf("the environment variable %q must be set", operatorDeploymentNameEnvKey)
+		return "", fmt.Errorf("the environment variable %q must be set", OperatorDeploymentNameEnvKey)
 	}
 	return ns, nil
 }

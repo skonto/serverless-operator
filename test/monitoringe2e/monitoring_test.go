@@ -1,6 +1,7 @@
 package monitoringe2e
 
 import (
+	"github.com/openshift-knative/serverless-operator/knative-operator/pkg/monitoring"
 	"testing"
 
 	"github.com/openshift-knative/serverless-operator/test"
@@ -13,6 +14,11 @@ func TestKnativeMetrics(t *testing.T) {
 	}
 	test.CleanupOnInterrupt(t, cleanup)
 	defer cleanup()
+	t.Setenv(monitoring.OperatorDeploymentNameEnvKey, "knative-openshift")
+	if err := SetUpServerlessOperatorMonitoring(caCtx); err != nil {
+		t.Fatal("Failed to setup Serverless Operator requirements", err)
+	}
+
 	t.Run("verify Serving control plane metrics work correctly", func(t *testing.T) {
 		// Serving control plane metrics should work
 		if err := VerifyMetrics(caCtx, servingMetricQueries); err != nil {

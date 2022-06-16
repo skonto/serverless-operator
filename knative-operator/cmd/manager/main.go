@@ -151,19 +151,10 @@ func setupServerlesOperatorMonitoring(cfg *rest.Config) error {
 		return errors.New("NAMESPACE not provided via environment")
 	}
 
-	operatorDeployment, err := monitoring.GetServerlessOperatorDeployment(cl, namespace)
-	if err != nil {
-		return err
-	}
-
 	// If we upgrade from an old version we need to remove the old Service Monitor
 	// that is not managed by OLM. See SRVCOM-1237 for more.
 	if err = monitoring.RemoveOldServiceMonitorResourcesIfExist(namespace, cl); err != nil {
 		return err
-	}
-
-	if err = monitoring.SetupClusterMonitoringRequirements(cl, operatorDeployment, namespace, nil); err != nil {
-		return fmt.Errorf("failed to setup monitoring resources: %w", err)
 	}
 
 	if err := health.InstallHealthDashboard(cl); err != nil {

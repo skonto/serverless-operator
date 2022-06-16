@@ -32,7 +32,7 @@ var (
 
 func init() {
 	_ = monitoringv1.AddToScheme(scheme.Scheme)
-	os.Setenv(operatorDeploymentNameEnvKey, "knative-openshift")
+	os.Setenv(OperatorDeploymentNameEnvKey, "knative-openshift")
 }
 
 func TestSetupMonitoringRequirements(t *testing.T) {

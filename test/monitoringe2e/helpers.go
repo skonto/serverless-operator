@@ -14,6 +14,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/wait"
 
+	"github.com/openshift-knative/serverless-operator/knative-operator/pkg/monitoring"
 	"github.com/openshift-knative/serverless-operator/test"
 
 	prom "github.com/prometheus/client_golang/api"
@@ -194,4 +195,15 @@ func getSecretNameForToken(secrets []corev1.Secret) string {
 		}
 	}
 	return ""
+}
+
+func SetUpServerlessOperatorMonitoring(caCtx *test.Context) error {
+	operatorDeployment, err := monitoring.GetServerlessOperatorDeployment(caCtx.Clients.CtrRuntime, test.OperatorsNamespace)
+	if err != nil {
+		return err
+	}
+	if err = monitoring.SetupClusterMonitoringRequirements(caCtx.Clients.CtrRuntime, operatorDeployment, test.OperatorsNamespace, nil); err != nil {
+		return err
+	}
+	return nil
 }
