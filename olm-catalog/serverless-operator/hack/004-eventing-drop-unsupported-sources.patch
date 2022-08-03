@@ -1,7 +1,7 @@
-diff --git a/olm-catalog/serverless-operator/manifests/operator_v1alpha1_knativeeventing_crd.yaml b/olm-catalog/serverless-operator/manifests/operator_v1alpha1_knativeeventing_crd.yaml
+diff --git a/olm-catalog/serverless-operator/manifests/operator_v1beta1_knativeeventing_crd.yaml b/olm-catalog/serverless-operator/manifests/operator_v1beta1_knativeeventing_crd.yaml
 index a9556e66..15fa6a7a 100644
---- a/olm-catalog/serverless-operator/manifests/operator_v1alpha1_knativeeventing_crd.yaml
-+++ b/olm-catalog/serverless-operator/manifests/operator_v1alpha1_knativeeventing_crd.yaml
+--- a/olm-catalog/serverless-operator/manifests/operator_v1beta1_knativeeventing_crd.yaml
++++ b/olm-catalog/serverless-operator/manifests/operator_v1beta1_knativeeventing_crd.yaml
 @@ -738,52 +738,6 @@ spec:
                              type: object
                          type: object

@@ -1,7 +1,7 @@
-diff --git a/olm-catalog/serverless-operator/manifests/operator_v1alpha1_knativeeventing_crd.yaml b/olm-catalog/serverless-operator/manifests/operator_v1alpha1_knativeeventing_crd.yaml
+diff --git a/olm-catalog/serverless-operator/manifests/operator_v1beta1_knativeeventing_crd.yaml b/olm-catalog/serverless-operator/manifests/operator_v1beta1_knativeeventing_crd.yaml
 index 0d311a02a..7b4cd096c 100644
---- a/olm-catalog/serverless-operator/manifests/operator_v1alpha1_knativeeventing_crd.yaml
-+++ b/olm-catalog/serverless-operator/manifests/operator_v1alpha1_knativeeventing_crd.yaml
+--- a/olm-catalog/serverless-operator/manifests/operator_v1beta1_knativeeventing_crd.yaml
++++ b/olm-catalog/serverless-operator/manifests/operator_v1beta1_knativeeventing_crd.yaml
 @@ -44,17 +44,8 @@ spec:
              type: object
            spec:
@@ -75,3 +75,16 @@ index 0d311a02a..7b4cd096c 100644
              type: object
            status:
              properties:
+@@ -1843,11 +1843,4 @@ spec:
+     singular: knativeeventing
+   scope: Namespaced
+   conversion:
+-    strategy: Webhook
+-    webhook:
+-      conversionReviewVersions: ["v1alpha1", "v1beta1"]
+-      clientConfig:
+-        service:
+-          name: operator-webhook
+-          namespace: default
+-          path: /resource-conversion
++    strategy: None
