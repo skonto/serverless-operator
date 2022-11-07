@@ -20,6 +20,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
 )
 
+const MinimumK8sAPIDeprecationVersion = "1.24.0"
+
 // UpgradePodDisruptionBudget upgrade the API version to policy/v1
 func UpgradePodDisruptionBudget() mf.Transformer {
 	return func(u *unstructured.Unstructured) error {
@@ -162,7 +164,7 @@ func DeprecatedAPIsTranformers(d discovery.DiscoveryInterface) []mf.Transformer 
 	// The policy/v1beta1 API version of PodDisruptionBudget will no longer be served in v1.25.
 	// The autoscaling/v2beta2 API version of HorizontalPodAutoscaler will no longer be served in v1.26
 	// TODO: When we move away from releases that bring v1beta1 we can remove this part
-	if err := CheckMinimumVersion(d, "1.24.0"); err == nil {
+	if err := CheckMinimumVersion(d, MinimumK8sAPIDeprecationVersion); err == nil {
 		transformers = append(transformers, UpgradePodDisruptionBudget(), UpgradeHorizontalPodAutoscaler(), SetSecurityContextForAdmissionController())
 	}
 	return transformers

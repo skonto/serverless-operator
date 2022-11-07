@@ -161,9 +161,15 @@ func TestKafkaSourceToKnativeService(t *testing.T) {
 		client.Clients.Kafka.SourcesV1beta1().KafkaSources(test.Namespace).Delete(context.Background(), kafkaSourceName+"-plain", metav1.DeleteOptions{})
 		client.Clients.Kafka.SourcesV1beta1().KafkaSources(test.Namespace).Delete(context.Background(), kafkaSourceName+"-tls", metav1.DeleteOptions{})
 		client.Clients.Kafka.SourcesV1beta1().KafkaSources(test.Namespace).Delete(context.Background(), kafkaSourceName+"-sasl", metav1.DeleteOptions{})
-		client.Clients.Kube.BatchV1beta1().CronJobs(test.Namespace).Delete(context.Background(), cronJobName+"-plain", metav1.DeleteOptions{})
-		client.Clients.Kube.BatchV1beta1().CronJobs(test.Namespace).Delete(context.Background(), cronJobName+"-tls", metav1.DeleteOptions{})
-		client.Clients.Kube.BatchV1beta1().CronJobs(test.Namespace).Delete(context.Background(), cronJobName+"-sasl", metav1.DeleteOptions{})
+		if err := common.CheckMinimumVersion(client.Clients.Kube.Discovery(), common.MinimumK8sAPIDeprecationVersion); err == nil {
+			client.Clients.Kube.BatchV1().CronJobs(test.Namespace).Delete(context.Background(), cronJobName+"-plain", metav1.DeleteOptions{})
+			client.Clients.Kube.BatchV1().CronJobs(test.Namespace).Delete(context.Background(), cronJobName+"-tls", metav1.DeleteOptions{})
+			client.Clients.Kube.BatchV1().CronJobs(test.Namespace).Delete(context.Background(), cronJobName+"-sasl", metav1.DeleteOptions{})
+		} else {
+			client.Clients.Kube.BatchV1beta1().CronJobs(test.Namespace).Delete(context.Background(), cronJobName+"-plain", metav1.DeleteOptions{})
+			client.Clients.Kube.BatchV1beta1().CronJobs(test.Namespace).Delete(context.Background(), cronJobName+"-tls", metav1.DeleteOptions{})
+			client.Clients.Kube.BatchV1beta1().CronJobs(test.Namespace).Delete(context.Background(), cronJobName+"-sasl", metav1.DeleteOptions{})
+		}
 		// Jobs and Pods are sometimes left in the namespace.
 		// Ref: https://github.com/kubernetes/kubernetes/issues/74741
 		deleteJobs(t, client, test.Namespace, cronJobName)
@@ -291,7 +297,7 @@ func TestKafkaSourceToKnativeService(t *testing.T) {
 		}
 
 		// send event to kafka topic
-		if err := common.CheckMinimumVersion(client.Clients.Kube.Discovery(), "1.24.0"); err == nil {
+		if err := common.CheckMinimumVersion(client.Clients.Kube.Discovery(), common.MinimumK8sAPIDeprecationVersion); err == nil {
 			cj := createCronJobObjV1(cronJobName+"-"+name, kafkaTopicName+"-"+name, kafkaSource.Spec.BootstrapServers[0])
 			_, err = client.Clients.Kube.BatchV1().CronJobs(test.Namespace).Create(context.Background(), cj, metav1.CreateOptions{})
 			if err != nil {
