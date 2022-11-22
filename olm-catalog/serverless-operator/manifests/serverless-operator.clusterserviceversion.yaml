@@ -252,7 +252,10 @@ spec:
               resources:
                 - horizontalpodautoscalers
               verbs:
-                - "*"
+                - create
+                - delete
+                - get
+                - list
             - apiGroups:
                 - batch
               resources:
@@ -264,7 +267,10 @@ spec:
               resources:
                 - poddisruptionbudgets
               verbs:
-                - "*"
+                - create
+                - delete
+                - get
+                - list
             - apiGroups:
                 - rbac.authorization.k8s.io
               resources:
@@ -299,7 +305,11 @@ spec:
               resources:
                 - images
               verbs:
-                - "*"
+                - create
+                - delete
+                - get
+                - list
+                - update
             # Downstream additions
             - apiGroups:
                 - monitoring.coreos.com
