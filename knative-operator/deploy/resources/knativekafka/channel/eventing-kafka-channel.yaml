@@ -144,7 +144,7 @@ metadata:
     kafka.eventing.knative.dev/release: v1.5
 rules:
   - apiGroups:
-      - "*"
+      - ""
     resources:
       - secrets
     verbs:

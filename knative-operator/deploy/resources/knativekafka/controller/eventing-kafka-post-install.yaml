@@ -62,7 +62,7 @@ rules:
       - delete
 
   - apiGroups:
-      - "*"
+      - ""
     resources:
       - services
     resourceNames:
@@ -75,7 +75,7 @@ rules:
 
   # to be able to list channel services and patch them
   - apiGroups:
-      - "*"
+      - ""
     resources:
       - services
     verbs:
@@ -134,7 +134,7 @@ rules:
       - delete
 
   - apiGroups:
-      - "*"
+      - ""
     resources:
       - serviceaccounts
     resourceNames:
@@ -146,7 +146,7 @@ rules:
       - delete
 
   - apiGroups:
-      - "*"
+      - ""
     resources:
       - secrets
     resourceNames:
@@ -156,7 +156,7 @@ rules:
       - delete
 
   - apiGroups:
-      - "*"
+      - "autoscaling"
     resources:
       - horizontalpodautoscalers
     resourceNames:
@@ -165,7 +165,7 @@ rules:
       - delete
 
   - apiGroups:
-      - "*"
+      - "policy"
     resources:
       - poddisruptionbudgets
     resourceNames:
@@ -174,7 +174,7 @@ rules:
       - delete
 
   - apiGroups:
-    - "*"
+    - "coordination.k8s.io"
     resources:
       - leases
     resourceNames:
@@ -185,7 +185,7 @@ rules:
   # to be able to read the old configmap and migrate
   # and then delete them
   - apiGroups:
-      - "*"
+      - ""
     resources:
       - configmaps
     resourceNames:
@@ -197,7 +197,7 @@ rules:
 
   # to be able update config in the new configmap
   - apiGroups:
-      - "*"
+      - ""
     resources:
       - configmaps
     resourceNames:

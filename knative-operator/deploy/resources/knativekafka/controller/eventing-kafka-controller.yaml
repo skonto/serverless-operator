@@ -977,7 +977,7 @@ metadata:
     kafka.eventing.knative.dev/release: v1.5
 rules:
   - apiGroups:
-      - "*"
+      - ""
     resources:
       - configmaps
       - services
@@ -988,7 +988,7 @@ rules:
       - update
       - create
   - apiGroups:
-      - "*"
+      - ""
     resources:
       - pods
     verbs:
@@ -997,7 +997,7 @@ rules:
       - get
       - watch
   - apiGroups:
-      - "*"
+      - ""
     resources:
       - pods/finalizers
     verbs:
@@ -1007,7 +1007,7 @@ rules:
       - update
       - delete
   - apiGroups:
-      - "*"
+      - ""
     resources:
       - events
     verbs:
@@ -1027,7 +1027,7 @@ rules:
       - watch
 
   - apiGroups:
-      - "*"
+      - ""
     resources:
       - secrets
     verbs:
@@ -1038,7 +1038,7 @@ rules:
 
   # Scheduler permissions
   - apiGroups:
-      - "*"
+      - ""
     resources:
       - nodes
     verbs:
