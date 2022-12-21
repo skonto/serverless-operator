@@ -8,6 +8,7 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"knative.dev/operator/pkg/apis/operator/base"
 	operatorv1beta1 "knative.dev/operator/pkg/apis/operator/v1beta1"
+	operator "knative.dev/operator/pkg/reconciler/common"
 )
 
 var (
@@ -23,6 +24,7 @@ func GetServingTransformers(comp base.KComponent) []mf.Transformer {
 	transformers := []mf.Transformer{injectNamespaceWithSubject(comp.GetNamespace(), OpenshiftMonitoringNamespace)}
 	if ShouldEnableMonitoring(comp.GetSpec().GetConfig()) {
 		transformers = append(transformers, InjectRbacProxyContainer(servingDeployments))
+		transformers = append(transformers, operator.OverridesTransform(KubeRbacProxyOverridesOnly(comp.GetSpec().GetWorkloadOverrides(), servingDeployments), nil))
 	}
 	return transformers
 }

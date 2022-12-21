@@ -13,6 +13,8 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/client-go/kubernetes/scheme"
+	"knative.dev/operator/pkg/apis/operator/base"
+	operator "knative.dev/operator/pkg/reconciler/common"
 )
 
 func TestInjectRbacProxyContainerToDeployments(t *testing.T) {
@@ -64,6 +66,24 @@ func TestInjectRbacProxyContainerToDeployments(t *testing.T) {
 		t.Fatalf("Unable to transform test manifest: %s", err)
 	}
 
+	limits := corev1.ResourceList{
+		corev1.ResourceMemory: resource.MustParse("100Mi"),
+		corev1.ResourceCPU:    resource.MustParse("100m"),
+	}
+	overrides := []base.WorkloadOverride{{
+		Name: "activator",
+		Resources: []base.ResourceRequirementsOverride{{
+			Container: RBACContainerName,
+			ResourceRequirements: corev1.ResourceRequirements{
+				Limits: limits,
+			},
+		}},
+	}}
+
+	if manifest, err = manifest.Transform(operator.OverridesTransform(overrides, nil)); err != nil {
+		t.Fatalf("Unable to transform test manifest: %s", err)
+	}
+
 	got := &appsv1.Deployment{}
 	if err := scheme.Scheme.Convert(&manifest.Resources()[0], got, nil); err != nil {
 		t.Fatalf("Unable to convert Unstructured to Deployment: %s", err)
@@ -106,13 +126,14 @@ func TestInjectRbacProxyContainerToDeployments(t *testing.T) {
 							MountPath: "/foo/bar",
 						}},
 					}, {
-						Name:  rbacContainerName,
+						Name:  RBACContainerName,
 						Image: os.Getenv(rbacProxyImageEnvVar),
 						VolumeMounts: []corev1.VolumeMount{{
 							Name:      "secret-activator-sm-service-tls",
 							MountPath: "/etc/tls/private",
 						}},
 						Resources: corev1.ResourceRequirements{
+							Limits: limits,
 							Requests: corev1.ResourceList{
 								"memory": resource.MustParse("20Mi"),
 								"cpu":    resource.MustParse("10m"),

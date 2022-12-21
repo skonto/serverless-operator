@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	rbacContainerName    = "kube-rbac-proxy"
+	RBACContainerName    = "kube-rbac-proxy"
 	rbacProxyImageEnvVar = "IMAGE_KUBE_RBAC_PROXY"
 )
 
@@ -62,7 +62,7 @@ func InjectRbacProxyContainer(deployments sets.String) mf.Transformer {
 			volumeName := fmt.Sprintf("secret-%s-sm-service-tls", u.GetName())
 			mountPath := "/etc/tls/private"
 			rbacProxyContainer := corev1.Container{
-				Name:  rbacContainerName,
+				Name:  RBACContainerName,
 				Image: os.Getenv(rbacProxyImageEnvVar),
 				VolumeMounts: []corev1.VolumeMount{{
 					Name:      volumeName,

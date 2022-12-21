@@ -8,18 +8,18 @@ import (
 	"strings"
 
 	mf "github.com/manifestival/manifestival"
+	"github.com/openshift-knative/serverless-operator/openshift-knative-operator/pkg/common"
 	monitoringv1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/util/intstr"
+	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/kubernetes/scheme"
 	"knative.dev/operator/pkg/apis/operator/base"
 	"knative.dev/pkg/logging"
-
-	"github.com/openshift-knative/serverless-operator/openshift-knative-operator/pkg/common"
 )
 
 const (
@@ -269,4 +269,14 @@ func getRBACManifest() (mf.Manifest, error) {
 	}
 	rbacManifest, err := mf.NewManifest(rbacPath)
 	return rbacManifest, err
+}
+
+func KubeRbacProxyOverridesOnly(overrides []base.WorkloadOverride, deployments sets.String) []base.WorkloadOverride {
+	var ret []base.WorkloadOverride
+	for _, override := range overrides {
+		if deployments.Has(override.Name) {
+			ret = append(ret, override)
+		}
+	}
+	return ret
 }
