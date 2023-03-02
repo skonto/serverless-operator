@@ -822,7 +822,7 @@ spec:
                 containers:
                   - name: knative-operator
                     # This reference will be replaced in local builds and CI via hack/lib/catalogsource.bash.
-                    image: registry.ci.openshift.org/knative/openshift-serverless-nightly:openshift-knative-operator
+                    image: registry.ci.openshift.org/knative/openshift-serverless-v1.28.0:openshift-knative-operator
                     readinessProbe:
                       periodSeconds: 1
                       httpGet:
@@ -875,19 +875,19 @@ spec:
                       - name: "IMAGE_queue-proxy"
                         value: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-queue"
                       - name: "IMAGE_activator"
-                        value: "docker.io/skonto/activator-ecd51ca5034883acbe737fde417a3d86@sha256:ccf0737fc8bc2da0f29b280fc1d0dd526c68d045c604d5851b2b761961a80b87"
+                        value: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-activator"
                       - name: "IMAGE_autoscaler"
-                        value: "docker.io/skonto/autoscaler-12c0fa24db31956a7cfa673210e4fa13@sha256:395076fa14fed82418ea4725b4c83095cba747657685456efcb222a9b417483a"
+                        value: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-autoscaler"
                       - name: "IMAGE_autoscaler-hpa"
-                        value: "docker.io/skonto/autoscaler-hpa-85c0b68178743d74ff7f663a72802ceb@sha256:6629bdae77543e3290b1178e1de8f8054f9e594e60a8fc482d1a819d6510ca72"
+                        value: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-autoscaler-hpa"
                       - name: "IMAGE_controller__controller"
-                        value: "docker.io/skonto/controller-f6fdb41c6acbc726e29a3104ff2ef720@sha256:2d5be2ca34c130bd066e1199bf85abf47004cf356244335c0194ad8bad803354"
+                        value: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-controller"
                       - name: "IMAGE_webhook__webhook"
-                        value: "docker.io/skonto/webhook-261c6506fca17bc41be50b3461f98f1c@sha256:ecf3def244b6e2d24346f6d0c61b0fc88fa9aec348f5890ca2392afae88e7ed9"
+                        value: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-webhook"
                       - name: "IMAGE_domain-mapping"
-                        value: "docker.io/skonto/domain-mapping-82f8626be89c35bcd6c666fd2fc8ccb7@sha256:0daafbcd8553a8a3f757a0a6418a7f806613010b33b632ee815b97ab2645bb76"
+                        value: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-domain-mapping"
                       - name: "IMAGE_domainmapping-webhook"
-                        value: "docker.io/skonto/domain-mapping-webhook-a127ae3e896f4e4bc1179581011b7824@sha256:b40f602309736e4db068497b0edf8d57b04c77824bbfd78357d16ec687caea62"
+                        value: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-domain-mapping-webhook"
                       - name: "IMAGE_storage-version-migration-serving-serving-1.7.0__migrate"
                         value: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-storage-version-migration"
                       - name: "IMAGE_kourier-gateway"
@@ -966,7 +966,7 @@ spec:
                 containers:
                   - name: knative-openshift
                     # This reference will be replaced in local builds and CI via hack/lib/catalogsource.bash.
-                    image: registry.ci.openshift.org/knative/openshift-serverless-nightly:knative-operator
+                    image: registry.ci.openshift.org/knative/openshift-serverless-v1.28.0:knative-operator
                     imagePullPolicy: Always
                     readinessProbe:
                       httpGet:
@@ -1026,19 +1026,19 @@ spec:
                       - name: "IMAGE_queue-proxy"
                         value: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-queue"
                       - name: "IMAGE_activator"
-                        value: "docker.io/skonto/activator-ecd51ca5034883acbe737fde417a3d86@sha256:ccf0737fc8bc2da0f29b280fc1d0dd526c68d045c604d5851b2b761961a80b87"
+                        value: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-activator"
                       - name: "IMAGE_autoscaler"
-                        value: "docker.io/skonto/autoscaler-12c0fa24db31956a7cfa673210e4fa13@sha256:395076fa14fed82418ea4725b4c83095cba747657685456efcb222a9b417483a"
+                        value: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-autoscaler"
                       - name: "IMAGE_autoscaler-hpa"
-                        value: "docker.io/skonto/autoscaler-hpa-85c0b68178743d74ff7f663a72802ceb@sha256:6629bdae77543e3290b1178e1de8f8054f9e594e60a8fc482d1a819d6510ca72"
+                        value: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-autoscaler-hpa"
                       - name: "IMAGE_controller__controller"
-                        value: "docker.io/skonto/controller-f6fdb41c6acbc726e29a3104ff2ef720@sha256:2d5be2ca34c130bd066e1199bf85abf47004cf356244335c0194ad8bad803354"
+                        value: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-controller"
                       - name: "IMAGE_webhook__webhook"
-                        value: "docker.io/skonto/webhook-261c6506fca17bc41be50b3461f98f1c@sha256:ecf3def244b6e2d24346f6d0c61b0fc88fa9aec348f5890ca2392afae88e7ed9"
+                        value: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-webhook"
                       - name: "IMAGE_domain-mapping"
-                        value: "docker.io/skonto/domain-mapping-82f8626be89c35bcd6c666fd2fc8ccb7@sha256:0daafbcd8553a8a3f757a0a6418a7f806613010b33b632ee815b97ab2645bb76"
+                        value: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-domain-mapping"
                       - name: "IMAGE_domainmapping-webhook"
-                        value: "docker.io/skonto/domain-mapping-webhook-a127ae3e896f4e4bc1179581011b7824@sha256:b40f602309736e4db068497b0edf8d57b04c77824bbfd78357d16ec687caea62"
+                        value: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-domain-mapping-webhook"
                       - name: "IMAGE_storage-version-migration-serving-serving-1.7.0__migrate"
                         value: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-storage-version-migration"
                       - name: "IMAGE_kourier-gateway"
@@ -1127,7 +1127,7 @@ spec:
                 containers:
                   - name: knative-openshift-ingress
                     # This reference will be replaced in local builds and CI via hack/lib/catalogsource.bash.
-                    image: registry.ci.openshift.org/knative/openshift-serverless-nightly:knative-openshift-ingress
+                    image: registry.ci.openshift.org/knative/openshift-serverless-v1.28.0:knative-openshift-ingress
                     imagePullPolicy: Always
                     ports:
                       - containerPort: 9090
@@ -1277,29 +1277,29 @@ spec:
   relatedImages:
     - name: knative-operator
       # This reference will be replaced in local builds and CI via hack/lib/catalogsource.bash.
-      image: registry.ci.openshift.org/knative/openshift-serverless-nightly:openshift-knative-operator
+      image: registry.ci.openshift.org/knative/openshift-serverless-v1.28.0:openshift-knative-operator
     - name: knative-openshift
       # This reference will be replaced in local builds and CI via hack/lib/catalogsource.bash.
-      image: registry.ci.openshift.org/knative/openshift-serverless-nightly:knative-operator
+      image: registry.ci.openshift.org/knative/openshift-serverless-v1.28.0:knative-operator
     - name: knative-openshift-ingress
       # This reference will be replaced in local builds and CI via hack/lib/catalogsource.bash.
-      image: registry.ci.openshift.org/knative/openshift-serverless-nightly:knative-openshift-ingress
+      image: registry.ci.openshift.org/knative/openshift-serverless-v1.28.0:knative-openshift-ingress
     - name: "IMAGE_queue-proxy"
       image: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-queue"
     - name: "IMAGE_activator"
-      image: "docker.io/skonto/activator-ecd51ca5034883acbe737fde417a3d86@sha256:ccf0737fc8bc2da0f29b280fc1d0dd526c68d045c604d5851b2b761961a80b87"
+      image: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-activator"
     - name: "IMAGE_autoscaler"
-      image: "docker.io/skonto/autoscaler-12c0fa24db31956a7cfa673210e4fa13@sha256:395076fa14fed82418ea4725b4c83095cba747657685456efcb222a9b417483a"
+      image: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-autoscaler"
     - name: "IMAGE_autoscaler-hpa"
-      image: "docker.io/skonto/autoscaler-hpa-85c0b68178743d74ff7f663a72802ceb@sha256:6629bdae77543e3290b1178e1de8f8054f9e594e60a8fc482d1a819d6510ca72"
+      image: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-autoscaler-hpa"
     - name: "IMAGE_controller__controller"
-      image: "docker.io/skonto/controller-f6fdb41c6acbc726e29a3104ff2ef720@sha256:2d5be2ca34c130bd066e1199bf85abf47004cf356244335c0194ad8bad803354"
+      image: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-controller"
     - name: "IMAGE_webhook__webhook"
-      image: "docker.io/skonto/webhook-261c6506fca17bc41be50b3461f98f1c@sha256:ecf3def244b6e2d24346f6d0c61b0fc88fa9aec348f5890ca2392afae88e7ed9"
+      image: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-webhook"
     - name: "IMAGE_domain-mapping"
-      image: "docker.io/skonto/domain-mapping-82f8626be89c35bcd6c666fd2fc8ccb7@sha256:0daafbcd8553a8a3f757a0a6418a7f806613010b33b632ee815b97ab2645bb76"
+      image: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-domain-mapping"
     - name: "IMAGE_domainmapping-webhook"
-      image: "docker.io/skonto/domain-mapping-webhook-a127ae3e896f4e4bc1179581011b7824@sha256:b40f602309736e4db068497b0edf8d57b04c77824bbfd78357d16ec687caea62"
+      image: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-domain-mapping-webhook"
     - name: "IMAGE_storage-version-migration-serving-serving-1.7.0__migrate"
       image: "registry.ci.openshift.org/openshift/knative-v1.7.0:knative-serving-storage-version-migration"
     - name: "IMAGE_kourier-gateway"
