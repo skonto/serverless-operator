@@ -33,7 +33,7 @@ spec:
     server: 'https://kubernetes.default.svc'
   source:
     path: docs/gitops/serverless
-    repoURL: 'https://github.com/openshift-knative/serverless-operator'
+    repoURL: 'https://github.com/skonto/serverless-operator'
     targetRevision: main
     directory:
       recurse: true
