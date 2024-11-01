@@ -878,8 +878,6 @@ spec:
                         value: knative.dev/serving-operator
                       - name: REQUIRED_SERVING_NAMESPACE
                         value: "knative-serving"
-                      - name: REQUIRED_SERVING_INGRESS_NAMESPACE
-                        value: "knative-serving-ingress"
                       - name: REQUIRED_EVENTING_NAMESPACE
                         value: "knative-eventing"
                       - name: SERVICE_MONITOR_RBAC_MANIFEST_PATH
@@ -965,8 +963,6 @@ spec:
                         value: "knative-openshift"
                       - name: REQUIRED_SERVING_NAMESPACE
                         value: "knative-serving"
-                      - name: REQUIRED_SERVING_INGRESS_NAMESPACE
-                        value: "knative-serving-ingress"
                       - name: REQUIRED_EVENTING_NAMESPACE
                         value: "knative-eventing"
                       - name: REQUIRED_KAFKA_NAMESPACE

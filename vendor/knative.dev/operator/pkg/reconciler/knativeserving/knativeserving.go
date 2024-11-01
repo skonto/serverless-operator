@@ -122,6 +122,11 @@ func (r *Reconciler) ReconcileKind(ctx context.Context, ks *v1beta1.KnativeServi
 			return nil
 		},
 		r.transform,
+		func(ctx context.Context, manifest *mf.Manifest, component base.KComponent) error {
+			*manifest = manifest.Filter(mf.Not(mf.All(mf.ByKind("Namespace"), mf.ByName("knative-serving-ingress"),
+				mf.ByAnnotation("argocd.argoproj.io/managed-by", ""))))
+			return nil
+		},
 		manifests.Install,
 		common.CheckDeployments,
 		common.DeleteObsoleteResources(ctx, ks, r.installed),

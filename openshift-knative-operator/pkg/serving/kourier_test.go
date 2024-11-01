@@ -1,6 +1,7 @@
 package serving
 
 import (
+	"context"
 	"fmt"
 	"testing"
 
@@ -14,6 +15,22 @@ import (
 	"knative.dev/networking/pkg/config"
 	"knative.dev/operator/pkg/apis/operator/base"
 	operatorv1beta1 "knative.dev/operator/pkg/apis/operator/v1beta1"
+	kubefake "knative.dev/pkg/client/injection/kube/client/fake"
+)
+
+var (
+	servingIngressNamespaceAnnotated = corev1.Namespace{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "knative-serving-ingress",
+			Annotations: map[string]string{
+				ArgoCDAnnotationKey: "openshift-gitops",
+			},
+		}}
+
+	servingIngressNamespace = corev1.Namespace{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "knative-serving-ingress",
+		}}
 )
 
 func TestOverrideKourierNamespace(t *testing.T) {
@@ -45,11 +62,54 @@ func TestOverrideKourierNamespace(t *testing.T) {
 		socommon.ServingOwnerName:      ks.Name,
 	})
 	want.SetOwnerReferences(nil)
-
-	overrideKourierNamespace(ks)(withKourier)
+	_, client := kubefake.With(context.Background(), &servingIngressNamespace)
+	overrideKourierNamespace(ks, client.CoreV1())(withKourier)
 
 	if !cmp.Equal(withKourier, want) {
 		t.Errorf("Resource was not as expected:\n%s", cmp.Diff(withKourier, want))
+	}
+	if _, ok := servingIngressNamespace.GetAnnotations()[ArgoCDAnnotationKey]; ok {
+		t.Error("Argo cd annotation should not be added to the knative-serving-ingress namespace")
+	}
+}
+
+func TestOverrideKourierNamespaceWithAnnoFiltering(t *testing.T) {
+	kourierLabels := map[string]string{
+		providerLabel: "kourier",
+	}
+
+	withKourier := &unstructured.Unstructured{}
+	withKourier.SetNamespace("foo")
+	withKourier.SetLabels(kourierLabels)
+	withKourier.SetOwnerReferences([]metav1.OwnerReference{{
+		APIVersion: "v1",
+		Kind:       "Foo",
+		Name:       "bar",
+	}})
+
+	ks := &operatorv1beta1.KnativeServing{
+		ObjectMeta: metav1.ObjectMeta{
+			Namespace: "knative-serving",
+			Name:      "test",
+		},
+	}
+
+	want := withKourier.DeepCopy()
+	want.SetNamespace("knative-serving-ingress")
+	want.SetLabels(map[string]string{
+		providerLabel:                  "kourier",
+		socommon.ServingOwnerNamespace: ks.Namespace,
+		socommon.ServingOwnerName:      ks.Name,
+	})
+	want.SetOwnerReferences(nil)
+	_, client := kubefake.With(context.Background(), &servingIngressNamespaceAnnotated)
+	overrideKourierNamespace(ks, client.CoreV1())(withKourier)
+
+	if !cmp.Equal(withKourier, want) {
+		t.Errorf("Resource was not as expected:\n%s", cmp.Diff(withKourier, want))
+	}
+	if _, ok := servingIngressNamespaceAnnotated.GetAnnotations()[ArgoCDAnnotationKey]; !ok {
+		t.Error("Argo cd annotation should be added to the knative-serving-ingress namespace")
 	}
 }
 
@@ -317,7 +377,8 @@ func TestOverrideKourierNamespaceOther(t *testing.T) {
 		},
 	}
 
-	overrideKourierNamespace(ks)(other)
+	_, client := kubefake.With(context.Background())
+	overrideKourierNamespace(ks, client.CoreV1())(other)
 
 	if !cmp.Equal(other, want) {
 		t.Errorf("Resource was not as expected:\n%s", cmp.Diff(other, want))
