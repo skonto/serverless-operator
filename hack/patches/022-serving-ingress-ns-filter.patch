@@ -1,0 +1,17 @@
+diff --git a/vendor/knative.dev/operator/pkg/reconciler/knativeserving/knativeserving.go b/vendor/knative.dev/operator/pkg/reconciler/knativeserving/knativeserving.go
+index 4b8eca0b0..19d3390ce 100644
+--- a/vendor/knative.dev/operator/pkg/reconciler/knativeserving/knativeserving.go
++++ b/vendor/knative.dev/operator/pkg/reconciler/knativeserving/knativeserving.go
+@@ -118,6 +118,11 @@ func (r *Reconciler) ReconcileKind(ctx context.Context, ks *v1beta1.KnativeServi
+ 		common.AppendAdditionalManifests,
+ 		r.appendExtensionManifests,
+ 		r.transform,
++		func(ctx context.Context, manifest *mf.Manifest, component base.KComponent) error {
++			*manifest = manifest.Filter(mf.Not(mf.All(mf.ByKind("Namespace"), mf.ByName("knative-serving-ingress"),
++				mf.ByAnnotation("argocd.argoproj.io/managed-by", ""))))
++			return nil
++		},
+ 		manifests.Install,
+ 		common.CheckDeployments,
+ 		common.DeleteObsoleteResources(ctx, ks, r.installed),
+

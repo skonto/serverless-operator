@@ -81,7 +81,7 @@ func (e *extension) Transformers(ks base.KComponent) []mf.Transformer {
 			corev1.EnvVar{Name: "HTTPS_PROXY", Value: os.Getenv("HTTPS_PROXY")},
 			corev1.EnvVar{Name: "NO_PROXY", Value: os.Getenv("NO_PROXY")},
 		),
-		overrideKourierNamespace(ks),
+		overrideKourierNamespace(ks, e.kubeclient.CoreV1()),
 		overrideKourierBootstrap(ks),
 		addKourierEnvValues(ks),
 		addKourierAppProtocol(ks),

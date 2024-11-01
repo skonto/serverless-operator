@@ -1,6 +1,10 @@
 package serving
 
 import (
+	"context"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	v1 "k8s.io/client-go/kubernetes/typed/core/v1"
+	operatorv1beta1 "knative.dev/operator/pkg/apis/operator/v1beta1"
 	"strings"
 
 	mf "github.com/manifestival/manifestival"
@@ -34,6 +38,8 @@ const (
 
 	// defaultControllerAddress is the address of net-kourier-controller defined in kourier-bootstrap configmap by default.
 	defaultControllerAddress = "net-kourier-controller.knative-serving"
+
+	ArgoCDAnnotationKey = "argocd.argoproj.io/managed-by"
 )
 
 // overrideKourierBootstrap overrides the address of kourier controller address.
@@ -63,8 +69,9 @@ func overrideKourierBootstrap(ks base.KComponent) mf.Transformer {
 
 // overrideKourierNamespace overrides the namespace of all Kourier related resources to
 // the -ingress suffix to be backwards compatible.
-func overrideKourierNamespace(ks base.KComponent) mf.Transformer {
+func overrideKourierNamespace(ks base.KComponent, client v1.CoreV1Interface) mf.Transformer {
 	nsInjector := mf.InjectNamespace(kourierNamespace(ks.GetNamespace()))
+
 	return func(u *unstructured.Unstructured) error {
 		provider := u.GetLabels()[providerLabel]
 		if provider != "kourier" {
@@ -81,6 +88,28 @@ func overrideKourierNamespace(ks base.KComponent) mf.Transformer {
 
 		// We need to unset OwnerReferences so Openshift doesn't delete Kourier resources.
 		u.SetOwnerReferences(nil)
+
+		// If there is an existing namespace managed by ArgoCD, we should mark the manifest resource so that it
+		// can be filtered out by the extension reconciler and never be applied to the cluster.
+		// The ns name has been temporarily changed to knative-serving due to the ns injector of the knative-operator,
+		// so it is not kourier-system at this point.
+		if strings.ToLower(u.GetKind()) == "namespace" && u.GetName() == "knative-serving" {
+			srv := ks.(*operatorv1beta1.KnativeServing)
+			if srv.Spec.Ingress == nil || srv.Spec.Ingress.Kourier.Enabled {
+				kourier_ns, err := client.Namespaces().Get(context.Background(), kourierNamespace(ks.GetNamespace()), metav1.GetOptions{})
+				if err == nil {
+					if _, ok := kourier_ns.GetLabels()[ArgoCDAnnotationKey]; ok {
+						annos := u.GetAnnotations()
+						if annos == nil {
+							annos = make(map[string]string, 1)
+						}
+						annos[ArgoCDAnnotationKey] = ""
+						u.SetAnnotations(annos)
+					}
+				}
+			}
+		}
+
 		return nsInjector(u)
 	}
 }
