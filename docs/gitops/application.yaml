@@ -33,8 +33,8 @@ spec:
     server: 'https://kubernetes.default.svc'
   source:
     path: docs/gitops/serverless
-    repoURL: 'https://github.com/openshift-knative/serverless-operator'
-    targetRevision: main
+    repoURL: 'https://github.com/skonto/serverless-operator'
+    targetRevision: support_argo_knative_ingress_simple
     directory:
       recurse: true
   project: openshift-serverless
