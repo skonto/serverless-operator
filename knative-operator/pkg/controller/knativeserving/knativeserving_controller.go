@@ -62,8 +62,7 @@ const (
 	// controller's PodTemplate to make it redeploy on certificate changes.
 	certVersionKey = socommon.ServingDownstreamDomain + "/mounted-cert-version"
 
-	requiredNsEnvName        = "REQUIRED_SERVING_NAMESPACE"
-	requiredNSIngressEnvName = "REQUIRED_SERVING_INGRESS_NAMESPACE"
+	requiredNsEnvName = "REQUIRED_SERVING_NAMESPACE"
 )
 
 var (
@@ -82,15 +81,13 @@ func newReconciler(mgr manager.Manager) reconcile.Reconciler {
 	client := mgr.GetClient()
 
 	// Create required namespace first.
-	for _, envVar := range []string{requiredNsEnvName, requiredNSIngressEnvName} {
-		if ns, required := os.LookupEnv(envVar); required {
-			client.Create(context.Background(), &corev1.Namespace{ObjectMeta: metav1.ObjectMeta{
-				Name: ns,
-				Labels: map[string]string{
-					socommon.ServerlessCommonLabelKey: socommon.ServerlessCommonLabelValue,
-				},
-			}})
-		}
+	if ns, required := os.LookupEnv(requiredNsEnvName); required {
+		client.Create(context.Background(), &corev1.Namespace{ObjectMeta: metav1.ObjectMeta{
+			Name: ns,
+			Labels: map[string]string{
+				socommon.ServerlessCommonLabelKey: socommon.ServerlessCommonLabelValue,
+			},
+		}})
 	}
 
 	return &ReconcileKnativeServing{

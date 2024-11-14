@@ -2,10 +2,11 @@ package serving
 
 import (
 	"context"
+	"strings"
+	
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v1 "k8s.io/client-go/kubernetes/typed/core/v1"
 	operatorv1beta1 "knative.dev/operator/pkg/apis/operator/v1beta1"
-	"strings"
 
 	mf "github.com/manifestival/manifestival"
 	"github.com/openshift-knative/serverless-operator/openshift-knative-operator/pkg/common"
