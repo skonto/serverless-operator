@@ -16,7 +16,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "2"
 spec:
   displayName: Serverless Operator
-  image: registry.ci.openshift.org/knative/serverless-index:main
+  image: image-registry.openshift-image-registry.svc:5000/openshift-marketplace/serverless-index:latest
   publisher: Red Hat
   sourceType: grpc
 ---
@@ -37,7 +37,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "3"
 spec:
   channel: "stable"
-  name: "serverless-operator"
-  source: "serverless-operator"
-  sourceNamespace: "openshift-marketplace"
+  name: serverless-operator
+  source: serverless-operator
+  sourceNamespace: openshift-marketplace
   installPlanApproval: Automatic
