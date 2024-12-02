@@ -21,7 +21,7 @@ oc apply -f docs/gitops/application.yaml
 oc adm policy add-role-to-user admin system:serviceaccount:openshift-gitops:openshift-gitops-argocd-application-controller -n knative-eventing
 oc adm policy add-role-to-user admin system:serviceaccount:openshift-gitops:openshift-gitops-argocd-application-controller -n knative-serving
 oc adm policy add-role-to-user admin system:serviceaccount:openshift-gitops:openshift-gitops-argocd-application-controller -n knative-serving-ingress
-
+oc adm policy add-role-to-user admin system:serviceaccount:openshift-gitops:openshift-gitops-argocd-application-controller -n default
 # Access the Argo CD UI by navigating to the openshift-gitops-server route
 oc get routes -n openshift-gitops openshift-gitops-server
 
