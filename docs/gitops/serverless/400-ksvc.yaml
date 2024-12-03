@@ -15,7 +15,7 @@ spec:
         autoscaling.knative.dev/target: "10"
     spec:
       containers:
-        - image: docker.io/skonto/helloworld-go
+        - image: gcr.io/knative-samples/helloworld-go
           imagePullPolicy: Always
           env:
             - name: TARGET
